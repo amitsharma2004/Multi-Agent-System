@@ -1,0 +1,323 @@
+{
+  "info": {
+    "name": "Agentic Sales Outreach API",
+    "description": "Complete API collection for testing the Agentic Sales Outreach System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"Test User\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Leads",
+      "item": [
+        {
+          "name": "Create Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_name\": \"Tech Innovations Inc\",\n  \"website\": \"https://techinnovations.com\",\n  \"industry\": \"Technology\",\n  \"contact_person\": \"John Doe\",\n  \"contact_email\": \"john@techinnovations.com\",\n  \"phone\": \"+1-555-0123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leads/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leads", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/leads/?skip=0&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leads", ""],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lead by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/leads/:lead_id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leads", ":lead_id"],
+              "variable": [
+                {
+                  "key": "lead_id",
+                  "value": "your_lead_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lead",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"researching\",\n  \"notes\": \"Initial contact made, waiting for response\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leads/:lead_id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leads", ":lead_id"],
+              "variable": [
+                {
+                  "key": "lead_id",
+                  "value": "your_lead_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Lead",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/leads/:lead_id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "leads", ":lead_id"],
+              "variable": [
+                {
+                  "key": "lead_id",
+                  "value": "your_lead_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Search & Scrape",
+      "item": [
+        {
+          "name": "Search Web (Tavily)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"AI startups in San Francisco\",\n  \"max_results\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/search",
+              "host": ["{{base_url}}"],
+              "path": ["search"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Scrape URL (Firecrawl)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/scrape",
+              "host": ["{{base_url}}"],
+              "path": ["scrape"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Root",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

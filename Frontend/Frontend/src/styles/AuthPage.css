@@ -1,0 +1,49 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  padding: 2rem;
+  position: relative;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.auth-page-content {
+  width: 100%;
+  max-width: 500px;
+}
+
+.auth-page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-page-header h1 {
+  color: var(--text-primary);
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.auth-page-header p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+}

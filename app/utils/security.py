@@ -25,7 +25,20 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     else:
         expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)
     
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "access"})
+    encoded_jwt = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+    return encoded_jwt
+
+
+def create_refresh_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    """Create JWT refresh token"""
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(days=settings.refresh_token_expire_days)
+    
+    to_encode.update({"exp": expire, "type": "refresh"})
     encoded_jwt = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
     return encoded_jwt
 
@@ -35,6 +48,28 @@ def decode_access_token(token: str) -> Optional[str]:
     try:
         payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
         email: str = payload.get("sub")
+        token_type: str = payload.get("type")
+        
+        # Verify it's an access token
+        if token_type != "access":
+            return None
+            
+        return email
+    except JWTError:
+        return None
+
+
+def decode_refresh_token(token: str) -> Optional[str]:
+    """Decode JWT refresh token and return email"""
+    try:
+        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
+        email: str = payload.get("sub")
+        token_type: str = payload.get("type")
+        
+        # Verify it's a refresh token
+        if token_type != "refresh":
+            return None
+            
         return email
     except JWTError:
         return None
